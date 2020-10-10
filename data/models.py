@@ -1,33 +1,46 @@
 from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey
 from .base import Base
 
+
+class Company(Base):
+    __tablename__ = 'company'
+    id = Column(Integer, primary_key=True)
+    name = Column(String) 
+
+    def __init__(self, name, *args, **kwargs):
+        self.name = name
+
 class Product(Base):
     __tablename__ = 'products'
     id = Column(Integer, primary_key=True)
-    long_description = Column(String)
+    description = Column(String)
 
-    def __init__(self, long_description,*args, **kwargs):
-        self.long_description = long_description
+    def __init__(self, description, *args, **kwargs):
+        self.description = description
 
 class RawData(Base):
-    __tablename__ = 'rawdatas'
+    __tablename__ = 'rawdata'
     id = Column(Integer, primary_key=True)
+    company_id = Column(Integer, ForeignKey('company.id'))
     description = Column(String)   
 
-    def __init__(self, description,*args, **kwargs):
+    def __init__(self, company_id, description, *args, **kwargs):
         self.description = description
+        self.company_id = company_id
     
 class Comparation(Base):
     __tablename__ = 'comparations'
     id = Column(Integer, primary_key=True)
+    company_id = Column(Integer, ForeignKey('company.id'))
     product_id = Column(Integer, ForeignKey('products.id'))
-    rawdata_id = Column(Integer, ForeignKey('rawdatas.id'))
+    rawdata_id = Column(Integer, ForeignKey('rawdata.id'))
     distance = Column(Float)
     similarity = Column(Float)
     jaccard = Column(Float)
     matched = Column(Boolean)
 
-    def __init__(self, product_id,rawdata_id,distance,similarity,jaccard,matched,*args, **kwargs):
+    def __init__(self, company_id, product_id, rawdata_id, distance, similarity, jaccard, matched, *args, **kwargs):
+        self.company_id = company_id
         self.product_id = product_id
         self.rawdata_id = rawdata_id
         self.distance = distance
