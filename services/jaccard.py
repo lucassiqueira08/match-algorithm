@@ -1,5 +1,9 @@
 def compute_jaccard_similarity_score(element_x, element_y):
-    intersection_cardinality = len(set(element_x).intersection(set(element_y)))
-    union_cardinality = len(set(element_x).union(set(element_y)))
-    return 100 * (intersection_cardinality / float(union_cardinality))
+    ex = set(element_x.split())
+    ey = set(element_y.split())
+    result = (len(ex.union(ey)) - len(ex.intersection(ey))) / len(
+        ex.union(ey)
+    )
+    similarity = (1 - result) * 100
+    return similarity
 

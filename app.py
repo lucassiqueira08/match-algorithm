@@ -65,7 +65,7 @@ if __name__ == "__main__":
                 for row_true in table_true:
                     x = main(row_rawdata.description, row_true.description)
                     if not x == None:
-                        if x.get('similarity') >= 50.00 and x.get('jaccard') >= 50.00: 
+                        if x.get('similarity') >= 70.00 or x.get('jaccard') >= 70.00: 
                             print(row_rawdata.description)
                             print(x)
                             print(row_true.description)  

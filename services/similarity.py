@@ -18,8 +18,8 @@ def _get_divisor(reference, target):
 class SimilarityService:
 
     def __init__(self):
-        self.similarity_percentage_accepted = 80.00
-        self.jaccard_percentage_accepted = 80.00
+        self.similarity_percentage_accepted = 70.00
+        self.jaccard_percentage_accepted = 70.00
         self.string_cleaner = StringCleaner()
 
     def _clear_string(self, target):
