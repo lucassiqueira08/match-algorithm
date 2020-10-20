@@ -22,12 +22,17 @@ if __name__ == "__main__":
 
     while flwss:
         option = int(input("""
-            
+        
             1 - Cradastrar Empresa
+            
             2 - Subir Base não sanitizada
             3 - Processar Base
+            
             4 - Verificar Resultados.
 
+            7 - Subir tabela verdade.
+            8 - verificar tabela verdade.
+        
             9 - Exit
             
         """))
@@ -56,16 +61,13 @@ if __name__ == "__main__":
             table_true = select(Product)
             table_rawdata = select_filter_rawdata(RawData, id)
             
-            for x in table_true:
-                print(x.description)
-
             for row_rawdata in table_rawdata:
                 count = count + 1
                 print("{}---------------------------------".format(count))
                 for row_true in table_true:
                     x = main(row_rawdata.description, row_true.description)
                     if not x == None:
-                        if x.get('similarity') >= 50.00 and x.get('jaccard') >= 50.00: 
+                        if x.get('similarity') >= 85.00 or x.get('jaccard') >= 85.00: 
                             print(row_rawdata.description)
                             print(x)
                             print(row_true.description)  
@@ -78,7 +80,7 @@ if __name__ == "__main__":
             table = extrator('base_true_full.xlsx', 'DESCRICAO')
             for row in table:
                 create(Product(description=row))
-            print('ok')    
+            print('base verdade gravada...')    
 
         if option == 8:
             """ verificar tabela de produtos """
