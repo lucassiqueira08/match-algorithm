@@ -18,9 +18,9 @@ def extrator(path, column):
 
 if __name__ == "__main__":
     init_db()
-    flwss = True
+    close = True
 
-    while flwss:
+    while close:
         option = int(input("""
             
             1 - Cradastrar Empresa
@@ -83,7 +83,7 @@ if __name__ == "__main__":
                 print(row.id, row.description)
 
         if option == 9:
-            flwss = False
+            close = False
             print('inté meu bem...')
 
         if option == 11:
