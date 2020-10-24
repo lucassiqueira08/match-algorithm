@@ -34,8 +34,8 @@ class SimilarityService:
 
     def calculate(self, reference, target):
         result = {}
-        clear_reference = self._clear_string(reference)
-        clear_target = self._clear_string(target)
+        clear_reference = self._clear_string(reference).lower()
+        clear_target = self._clear_string(target).lower()
 
         distance_result = distance(clear_reference, clear_target)
         divisor = _get_divisor(clear_reference, clear_target)

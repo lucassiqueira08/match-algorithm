@@ -55,9 +55,6 @@ if __name__ == "__main__":
             id = int(input(' Digite o id da empresa : '))
             table_true = select(Product)
             table_rawdata = select_filter_rawdata(RawData, id)
-            
-            for x in table_true:
-                print(x.description)
 
             for row_rawdata in table_rawdata:
                 count = count + 1
@@ -65,10 +62,10 @@ if __name__ == "__main__":
                 for row_true in table_true:
                     x = main(row_rawdata.description, row_true.description)
                     if not x == None:
-                        if x.get('similarity') >= 70.00 or x.get('jaccard') >= 70.00: 
-                            print(row_rawdata.description)
+                        if x.get('similarity') >= 50.00 or x.get('jaccard') >= 50.00:
+                            print(SimilarityService()._clear_string(row_rawdata.description).lower())
                             print(x)
-                            print(row_true.description)  
+                            print(SimilarityService()._clear_string(row_true.description).lower())  
         
         if option == 4:
             print('flwsss')
