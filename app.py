@@ -67,8 +67,10 @@ if __name__ == "__main__":
                     x = main(row_rawdata.description, row_true.description)
                     if not x == None:
                         if x.get('similarity') >= 50.00 or x.get('jaccard') >= 50.00:
+                            print(row_rawdata.description)
                             print(SimilarityService()._clear_string(row_rawdata.description).lower())
                             print(x)
+                            print(row_true.description)
                             print(SimilarityService()._clear_string(row_true.description).lower())  
         
         if option == 4:
