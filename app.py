@@ -24,9 +24,13 @@ if __name__ == "__main__":
         option = int(input("""
             
             1 - Cradastrar Empresa
+            
             2 - Subir Base não sanitizada
             3 - Processar Base
             4 - Verificar Resultados.
+
+            7 - Subir tabela verdade
+            8 - Print tabela verdade
 
             9 - Exit
             
@@ -84,7 +88,7 @@ if __name__ == "__main__":
 
         if option == 9:
             close = False
-            print('inté meu bem...')
+            print('hasta la vista baby...')
 
         if option == 11:
             # companies = select(Company)
