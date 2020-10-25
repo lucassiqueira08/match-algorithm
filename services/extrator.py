@@ -17,7 +17,6 @@ def package_sheet(datas):
         list_data.append(list_temp)
     sheet = pd.DataFrame(list_data,
                         columns=['row_rawdata', 'row_true', 'jaccard', 'similarity']) 
-
     return sheet
 
 def export_file(matchs, inconclusive, no_match):

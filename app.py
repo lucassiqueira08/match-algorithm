@@ -55,19 +55,16 @@ if __name__ == "__main__":
 
         
         if option == 3:
-            count = 0
+
             id = int(input(' Digite o id da empresa : '))
             table_true = select(Product)
             table_rawdata = select_filter_rawdata(RawData, id)
-            list_x = []
-
+            
             list_no_match = []
             list_ava = []
             list_match = []
+            
             for row_rawdata in table_rawdata:
-                count = count + 1
-                count_match = 0
-                # print("{}---------------------------------".format(count))
                 for row_true in table_true:
                     x = main(row_rawdata.description, row_true.description)
                     if not x == None:
@@ -79,15 +76,14 @@ if __name__ == "__main__":
                             x['row_rawdata'] = row_rawdata.description
                             x['row_true'] = row_true.description
                             list_ava.append(x)
-                            count_match = count_match + 1
                         else:
                             x['row_rawdata'] = row_rawdata.description
                             x['row_true'] = row_true.description
                             list_no_match.append(x)
-            # export_file(list_match, list_ava, list_no_match)
+            export_file(list_match, list_ava, list_no_match)
             print("""
 
-                * Resultados *
+                * Results *
 
                 matchs - {}
 
@@ -96,6 +92,7 @@ if __name__ == "__main__":
                 no_matchs - {}
             
             """.format(len(list_match), len(list_ava), len(list_no_match)))
+            
         if option == 4:
             print('flwsss')
         
