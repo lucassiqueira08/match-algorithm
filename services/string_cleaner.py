@@ -6,7 +6,6 @@ class StringCleaner:
         "cor",
         "larg fita",
         "espes",
-        "acabamento",
         "diametro",
         "tipo",
         ",", ".", ":", "-", ";", "(", ")", "referencia", "p/", "parte", " / ", " + "
@@ -15,6 +14,6 @@ class StringCleaner:
     def remove_stop_words(self, target_string):
         for stop_word in self.stop_words:
             target_string = target_string.lower()
-            target_string = target_string.replace(stop_word, "")
+            target_string = target_string.replace(stop_word, " ")
 
         return target_string
