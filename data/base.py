@@ -21,6 +21,10 @@ def create(objects):
     db_session.commit()
     return objects
 
+def result_filter(object, id_empresa, match):
+    select = db_session.query(object).filter(object.company_id == id_empresa, object.matched == match)
+    return [result for result in select]
+
 def select(object):
     result = db_session.query(object).all()
     return result

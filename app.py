@@ -1,7 +1,7 @@
 from services.similarity import SimilarityService
 from services.extrator import read_file, get_column_values, export_file
 from data.models import Company, Product, RawData, Comparation
-from data.base import init_db, create, select, select_filter, select_filter_rawdata
+from data.base import init_db, create, select, select_filter, select_filter_rawdata, result_filter
 
 
 def main(reference, target):
@@ -63,38 +63,66 @@ if __name__ == "__main__":
             list_no_match = []
             list_ava = []
             list_match = []
+            result = []
+            for row_data_target in table_rawdata:
+                for row_data_true in table_true:
+                    comparation = main(row_data_target.description, row_data_true.description)
+                    if not comparation == None:
+                        comparation['row_rawdata'] = row_data_target.id
+                        comparation['row_true'] = row_data_true.id
+                        result.append(Comparation(company_id= id, 
+                                                  product_id=row_data_true.id,
+                                                  rawdata_id=row_data_target.id,
+                                                  jaccard= comparation['jaccard'],
+                                                  similarity= comparation['similarity'], 
+                                                  matched= comparation['matched'],
+                                                  ))
+            create(result)
             
-            for row_rawdata in table_rawdata:
-                for row_true in table_true:
-                    x = main(row_rawdata.description, row_true.description)
-                    if not x == None:
-                        if x.get('similarity') > 85.00 or x.get('jaccard') > 85.00:
-                            x['row_rawdata'] = row_rawdata.description
-                            x['row_true'] = row_true.description
-                            list_match.append(x)
-                        elif x.get('similarity') >= 65.00 and x.get('similarity') <= 84.99 or x.get('jaccard') >= 65.00 and x.get('jaccard') <= 84.99:
-                            x['row_rawdata'] = row_rawdata.description
-                            x['row_true'] = row_true.description
-                            list_ava.append(x)
-                        else:
-                            x['row_rawdata'] = row_rawdata.description
-                            x['row_true'] = row_true.description
-                            list_no_match.append(x)
-            export_file(list_match, list_ava, list_no_match)
-            print("""
 
-                * Results *
+            # create(Company(name=str(input(" Digite o nome da empresa : "))))
 
-                matchs - {}
+                        # if comparison.get('similarity') > 85.00 or comparison.get('jaccard') > 85.00:
+                        #     comparison['row_rawdata'] = row_data_target.description
+                        #     comparison['row_true'] = row_data_true.description
+                        #     list_match.append(comparison)
+                        # elif comparison.get('similarity') >= 65.00 and comparison.get('similarity') <= 84.99 or comparison.get('jaccard') >= 65.00 and comparison.get('jaccard') <= 84.99:
+                        #     comparison['row_rawdata'] = row_data_target.description
+                        #     comparison['row_true'] = row_data_true.description
+                        #     list_ava.append(comparison)
+                        # else:
+                        #     comparison['row_rawdata'] = row_data_target.description3
+                        #     comparison['row_true'] = row_data_true.description
+                        #     list_no_match.append(comparison)
 
-                Inconclusive - {}
 
-                no_matchs - {}
+            # export_file(list_match, list_ava, list_no_match)
+            # print("""
+
+            #     * Results *
+
+            #     matchs - {}
+
+            #     Inconclusive - {}
+
+            #     no_matchs - {}
             
-            """.format(len(list_match), len(list_ava), len(list_no_match)))
+            # """.format(len(list_match), len(list_ava), len(list_no_match)))
             
         if option == 4:
-            print('flwsss')
+            id = int(input(' Digite o id da empresa : '))
+
+            print(len(result_filter(Comparation, id, 'match')))
+            for row in result_filter(Comparation, id, 'match'):
+                print(row.id, row.jaccard, row.similarity, row.product_id, row.rawdata_id)
+
+            print(len(result_filter(Comparation, id, 'inconclusive')))
+            for row in result_filter(Comparation, id, 'inconclusive'):
+                print(row.id, row.jaccard, row.similarity, row.product_id, row.rawdata_id)
+            
+            # print(len(result_filter(Comparation, id, 'no_match')))
+            # for row in result_filter(Comparation, id, 'no_match'):
+            #     print(row.id, row.jaccard, row.similarity, row.product_id, row.rawdata_id)
         
         if option == 7:
             """ subir tabela verdade """
