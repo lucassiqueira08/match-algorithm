@@ -1,7 +1,7 @@
 from services.similarity import SimilarityService
 from services.extrator import read_file, get_column_values, export_file
 from data.models import Company, Product, RawData, Comparation
-from data.base import init_db, create, select, select_filter, select_filter_rawdata, result_filter, result_filter_inconclusive
+from data.base import init_db, create, select, select_filter, select_filter_rawdata, result_filter
 
 
 def main(reference, target):
@@ -112,18 +112,99 @@ if __name__ == "__main__":
         if option == 4:
             id = int(input(' Digite o id da empresa : '))
 
-            # print(len(result_filter(Comparation, id, 'match')))
-            # for row in result_filter(Comparation, id, 'match'):
-            #     print(row.id, row.jaccard, row.similarity, row.product_id, row.rawdata_id)
+            # print(len(result_filter(Comparation, id)))
+            x = []
+            list_matchs = []
+            list_inconclusive = []
+            list_nomatchs = []
+            for row in result_filter(Comparation, id):
+                if row.matched == 'match':
+                    print('') #row.matched)
+                x.append(row.__dict__)
+            # for y in x:
+            #     print(y)
+            temp_m =[]
+            temp_a =[]
+            temp_n =[] 
+            rawadatas_ids = []
+            for i in range(len(x)): 
+                now = i
+            #     if x[now]['matched'] == 'inconclusive':
+            #         x[now]['total'] = x[now]['similarity']+ x[now]['jaccard']
+            #         temp_m.append(x[now])
+            
+            # temp_m = sorted(temp_m, key=lambda x: x['total'], reverse=True)
+
+                if x[now]['matched'] == 'match':
+                    x[now]['total'] = x[now]['similarity']+ x[now]['jaccard']
+                    temp_m.append(x[now])
+                
+                if x[now]['matched'] == 'inconclusive':
+                    x[now]['total'] = x[now]['similarity']+ x[now]['jaccard']
+                    temp_a.append(x[now])
+
+                if x[now]['matched'] == 'no_match':
+                    x[now]['total'] = x[now]['similarity']+ x[now]['jaccard']
+                    temp_n.append(x[now])
+
+            temp_m = sorted(temp_m, key=lambda x: x['total'], reverse=True)
+            temp_a = sorted(temp_a, key=lambda x: x['total'], reverse=True)
+            temp_n = sorted(temp_n, key=lambda x: x['total'], reverse=True)
+
+            for i in range(len(temp_m)):
+                now = i
+                prox = i+1
+                if prox >= len(temp_m):
+                    prox = i
+                if temp_m[now]['rawdata_id'] != temp_m[prox]['rawdata_id']:
+                    list_matchs.append(temp_m[now])   
+                    rawadatas_ids.append(temp_m[now]['rawdata_id'])
+            list_matchs.append(temp_m[-1])   
+            rawadatas_ids.append(temp_m[-1]['rawdata_id'])
+
+            print('')
+            print(rawadatas_ids)
+            for y in list_matchs:
+                print(y)  
+
+            for i in range(len(temp_a)):
+                now = i
+                prox = i+1
+                if prox >= len(temp_a):
+                    prox = i
+                if not temp_a[now]['rawdata_id'] in rawadatas_ids:
+                    list_inconclusive.append(temp_a[now])
+                    rawadatas_ids.append(temp_a[now]['rawdata_id'])
+
+            print('')   
+            print(rawadatas_ids)
+            for y in list_inconclusive:
+                print(y)
+
+            for i in range(len(temp_n)):
+                now = i
+                prox = i+1
+                if prox >= len(temp_n):
+                    prox = i
+                if not temp_n[now]['rawdata_id'] in rawadatas_ids:
+                    list_nomatchs.append(temp_n[now])
+                    rawadatas_ids.append(temp_n[now]['rawdata_id'])
+
+            print('')
+            print(rawadatas_ids)
+            for y in list_nomatchs:
+                print(y)
+
+
 
             # print(len(result_filter_inconclusive(Comparation, id, 'inconclusive')))
-            list_ava = result_filter_inconclusive(Comparation, id, 'inconclusive', RawData)
+            # list_ava = result_filter_inconclusive(Comparation, id, 'inconclusive', RawData)
                 # print(row)
             
             # print(len(result_filter(Comparation, id, 'no_match')))
             # for row in result_filter(Comparation, id, 'no_match'):
             #     print(row.id, row.jaccard, row.similarity, row.product_id, row.rawdata_id)
-            export_file([], list_ava, [])
+            # export_file([], list_ava, [])
 
         
         if option == 7:

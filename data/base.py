@@ -25,34 +25,34 @@ def create(objects):
     db_session.commit()
     return objects
 
-def result_filter(object, id_empresa, match):
-    select = db_session.query(object).filter(object.company_id == id_empresa, object.matched == match)
+def result_filter(object, id_empresa):
+    select = db_session.query(object).filter(object.company_id == id_empresa)
     return [result for result in select]
 
 
 
-def result_filter_inconclusive(object, id_empresa, inconclusive, related_object):
-    result = []
-    comparations = db_session.query(object).filter(object.company_id == id_empresa, object.matched == inconclusive).order_by(object.rawdata_id)
-    for comparation in comparations:
-        group = []
-        for comp in comparations:
-            if comp.rawdata_id == comparation.rawdata_id:
-                new_comp = comp.__dict__
-                new_comp['total'] = new_comp['jaccard'] + new_comp['similarity']
-                if new_comp not in group:
-                    group.append(new_comp)
+# def result_filter_inconclusive(object, id_empresa, inconclusive, related_object):
+#     result = []
+#     comparations = db_session.query(object).filter(object.company_id == id_empresa, object.matched == inconclusive).order_by(object.rawdata_id)
+#     for comparation in comparations:
+#         group = []
+#         for comp in comparations:
+#             if comp.rawdata_id == comparation.rawdata_id:
+#                 new_comp = comp.__dict__
+#                 new_comp['total'] = new_comp['jaccard'] + new_comp['similarity']
+#                 if new_comp not in group:
+#                     group.append(new_comp)
         
-        new_group = sorted(group, key=lambda x: x['total'])
-        new_group = new_group[0:4]
-        print(len(new_group), new_group[0]['total'], new_group[0]['rawdata_id'], new_group[0]['product_id'])
-        result.extend(new_group)
+#         new_group = sorted(group, key=lambda x: x['total'])
+#         new_group = new_group[0:4]
+#         print(len(new_group), new_group[0]['total'], new_group[0]['rawdata_id'], new_group[0]['product_id'])
+#         result.extend(new_group)
 
-    # select = db_session.query(object).filter(object.company_id == id_empresa, object.matched == inconclusive).distinct(object.rawdata_id.name)
-    # select = db_session.query(object).join(related_object, object.rawdata_id==related_object.id).distinct(related_object.description)
-    # print(result.all())
-    print(f'result ------------------ ${result}')
-    return result
+#     # select = db_session.query(object).filter(object.company_id == id_empresa, object.matched == inconclusive).distinct(object.rawdata_id.name)
+#     # select = db_session.query(object).join(related_object, object.rawdata_id==related_object.id).distinct(related_object.description)
+#     # print(result.all())
+#     print(f'result ------------------ ${result}')
+#     return result
 
 def select(object):
     result = db_session.query(object).all()
