@@ -13,10 +13,10 @@ def get_column_values(dataframe, column):
 def package_sheet(datas):
     list_data = []
     for data in datas:
-        list_temp= data['row_rawdata'], data['row_true'], data['jaccard'], data['similarity'] 
+        list_temp= data['rawdata_id'], data['product_id'], data['jaccard'], data['similarity'] 
         list_data.append(list_temp)
     sheet = pd.DataFrame(list_data,
-                        columns=['row_rawdata', 'row_true', 'jaccard', 'similarity']) 
+                        columns=['rawdata_id', 'product_id', 'jaccard', 'similarity']) 
     return sheet
 
 def export_file(matchs, inconclusive, no_match):

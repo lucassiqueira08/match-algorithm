@@ -1,7 +1,7 @@
 from services.similarity import SimilarityService
 from services.extrator import read_file, get_column_values, export_file
 from data.models import Company, Product, RawData, Comparation
-from data.base import init_db, create, select, select_filter, select_filter_rawdata, result_filter
+from data.base import init_db, create, select, select_filter, select_filter_rawdata, result_filter, result_filter_inconclusive
 
 
 def main(reference, target):
@@ -112,17 +112,19 @@ if __name__ == "__main__":
         if option == 4:
             id = int(input(' Digite o id da empresa : '))
 
-            print(len(result_filter(Comparation, id, 'match')))
-            for row in result_filter(Comparation, id, 'match'):
-                print(row.id, row.jaccard, row.similarity, row.product_id, row.rawdata_id)
+            # print(len(result_filter(Comparation, id, 'match')))
+            # for row in result_filter(Comparation, id, 'match'):
+            #     print(row.id, row.jaccard, row.similarity, row.product_id, row.rawdata_id)
 
-            print(len(result_filter(Comparation, id, 'inconclusive')))
-            for row in result_filter(Comparation, id, 'inconclusive'):
-                print(row.id, row.jaccard, row.similarity, row.product_id, row.rawdata_id)
+            # print(len(result_filter_inconclusive(Comparation, id, 'inconclusive')))
+            list_ava = result_filter_inconclusive(Comparation, id, 'inconclusive', RawData)
+                # print(row)
             
             # print(len(result_filter(Comparation, id, 'no_match')))
             # for row in result_filter(Comparation, id, 'no_match'):
             #     print(row.id, row.jaccard, row.similarity, row.product_id, row.rawdata_id)
+            export_file([], list_ava, [])
+
         
         if option == 7:
             """ subir tabela verdade """
