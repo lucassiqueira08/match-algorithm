@@ -153,19 +153,34 @@ if __name__ == "__main__":
                 if prox >= len(temp_m):
                     prox = i
                 if temp_m[now]['rawdata_id'] != temp_m[prox]['rawdata_id']:
-                    list_matchs.append(temp_m[now])   
+                    temp_list = []
+                    for search in temp_m:
+                        if search['rawdata_id'] == temp_m[now]['rawdata_id']:
+                            temp_list.append(search)    
+                    list_matchs.append(temp_list[0:])   
                     rawadatas_ids.append(temp_m[now]['rawdata_id'])
             list_matchs.append(temp_m[-1])   
             rawadatas_ids.append(temp_m[-1]['rawdata_id'])
 
             print('')
             print(rawadatas_ids)
-            for y in list_matchs:
-                product = select_filter(Product, y['product_id'])
-                rawdata = select_filter(RawData, y['rawdata_id'])
-                y['product_id'] = product[0].description
-                y['rawdata_id'] = rawdata[0].description
-                print(y)  
+            matchs_export = []
+            for lists in list_matchs:
+                if type(lists) == list:
+                    for y in lists:
+                        print(y)
+                        product = select_filter(Product, y['product_id'])
+                        rawdata = select_filter(RawData, y['rawdata_id'])
+                        y['product_id'] = product[0].description
+                        y['rawdata_id'] = rawdata[0].description
+                        matchs_export.append(y)
+                else:
+                    print(lists)
+                    product = select_filter(Product, lists['product_id'])
+                    rawdata = select_filter(RawData, lists['rawdata_id'])
+                    lists['product_id'] = product[0].description
+                    lists['rawdata_id'] = rawdata[0].description
+                    
 
             for i in range(len(temp_a)):
                 now = i
@@ -222,12 +237,12 @@ if __name__ == "__main__":
                     nomatch_export.append(y)
                     
 
-            export_file(list_matchs, inconclusive_export, nomatch_export)
+            export_file(matchs_export, inconclusive_export, nomatch_export)
 
             fim = time.time()
 
             print('')
-            print(fim - inicio)
+            print(""" Tempo de execução .: {}""".format((fim - inicio)))
 
         
         if option == 7:
