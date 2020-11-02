@@ -2,7 +2,7 @@ from services.similarity import SimilarityService
 from services.extrator import read_file, get_column_values, export_file
 from data.models import Company, Product, RawData, Comparation
 from data.base import init_db, create, select, select_filter, select_filter_rawdata, result_filter
-
+import time
 
 def main(reference, target):
     similarity_service = SimilarityService()
@@ -96,7 +96,7 @@ if __name__ == "__main__":
                         #     list_no_match.append(comparison)
 
 
-            # export_file(list_match, list_ava, list_no_match)
+                    
             # print("""
 
             #     * Results *
@@ -113,27 +113,23 @@ if __name__ == "__main__":
             id = int(input(' Digite o id da empresa : '))
 
             # print(len(result_filter(Comparation, id)))
+            inicio = time.time()
             x = []
             list_matchs = []
             list_inconclusive = []
             list_nomatchs = []
             for row in result_filter(Comparation, id):
                 if row.matched == 'match':
-                    print('') #row.matched)
+                    print('')
                 x.append(row.__dict__)
-            # for y in x:
-            #     print(y)
+
             temp_m =[]
             temp_a =[]
             temp_n =[] 
             rawadatas_ids = []
+
             for i in range(len(x)): 
                 now = i
-            #     if x[now]['matched'] == 'inconclusive':
-            #         x[now]['total'] = x[now]['similarity']+ x[now]['jaccard']
-            #         temp_m.append(x[now])
-            
-            # temp_m = sorted(temp_m, key=lambda x: x['total'], reverse=True)
 
                 if x[now]['matched'] == 'match':
                     x[now]['total'] = x[now]['similarity']+ x[now]['jaccard']
@@ -165,6 +161,10 @@ if __name__ == "__main__":
             print('')
             print(rawadatas_ids)
             for y in list_matchs:
+                product = select_filter(Product, y['product_id'])
+                rawdata = select_filter(RawData, y['rawdata_id'])
+                y['product_id'] = product[0].description
+                y['rawdata_id'] = rawdata[0].description
                 print(y)  
 
             for i in range(len(temp_a)):
@@ -172,14 +172,28 @@ if __name__ == "__main__":
                 prox = i+1
                 if prox >= len(temp_a):
                     prox = i
+
                 if not temp_a[now]['rawdata_id'] in rawadatas_ids:
-                    list_inconclusive.append(temp_a[now])
+                    temp_list = []
+                    for search in temp_a:
+                        if search['rawdata_id'] == temp_a[now]['rawdata_id']:
+                            temp_list.append(search)
+                    list_inconclusive.append(temp_list[0:5])
                     rawadatas_ids.append(temp_a[now]['rawdata_id'])
 
-            print('')   
+
+            print('')
             print(rawadatas_ids)
-            for y in list_inconclusive:
-                print(y)
+            inconclusive_export = []
+            for lists in list_inconclusive:
+                print('')
+                for y in lists:
+                    print(y)
+                    product = select_filter(Product, y['product_id'])
+                    rawdata = select_filter(RawData, y['rawdata_id'])
+                    y['product_id'] = product[0].description
+                    y['rawdata_id'] = rawdata[0].description
+                    inconclusive_export.append(y)
 
             for i in range(len(temp_n)):
                 now = i
@@ -187,24 +201,33 @@ if __name__ == "__main__":
                 if prox >= len(temp_n):
                     prox = i
                 if not temp_n[now]['rawdata_id'] in rawadatas_ids:
-                    list_nomatchs.append(temp_n[now])
+                    temp_list = []
+                    for search in temp_n:
+                        if search['rawdata_id'] == temp_n[now]['rawdata_id']:
+                            temp_list.append(search)
+                    list_nomatchs.append(temp_list[0:5])
                     rawadatas_ids.append(temp_n[now]['rawdata_id'])
 
             print('')
             print(rawadatas_ids)
-            for y in list_nomatchs:
-                print(y)
+            nomatch_export = []
+            for lists in list_nomatchs:
+                print('')
+                for y in lists:
+                    print(y)
+                    product = select_filter(Product, y['product_id'])
+                    rawdata = select_filter(RawData, y['rawdata_id'])
+                    y['product_id'] = product[0].description
+                    y['rawdata_id'] = rawdata[0].description
+                    nomatch_export.append(y)
+                    
 
+            export_file(list_matchs, inconclusive_export, nomatch_export)
 
+            fim = time.time()
 
-            # print(len(result_filter_inconclusive(Comparation, id, 'inconclusive')))
-            # list_ava = result_filter_inconclusive(Comparation, id, 'inconclusive', RawData)
-                # print(row)
-            
-            # print(len(result_filter(Comparation, id, 'no_match')))
-            # for row in result_filter(Comparation, id, 'no_match'):
-            #     print(row.id, row.jaccard, row.similarity, row.product_id, row.rawdata_id)
-            # export_file([], list_ava, [])
+            print('')
+            print(fim - inicio)
 
         
         if option == 7:
@@ -227,11 +250,6 @@ if __name__ == "__main__":
             # companies = select(Company)
             # print([("id - {}, {}".format(company.id, company.name)) for company in companies])
             result = select_filter(Company, 1)
-            print(result)
+            print(result[0].name)
 
 
-
-
-# print
-
-# criar time de execuçao no processamento dos dados
