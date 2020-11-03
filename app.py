@@ -179,6 +179,7 @@ if __name__ == "__main__":
                     rawdata = select_filter(RawData, lists['rawdata_id'])
                     lists['product_id'] = product[0].description
                     lists['rawdata_id'] = rawdata[0].description
+                    matchs_export.append(lists)
                     
 
             for i in range(len(temp_a)):
