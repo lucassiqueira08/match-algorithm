@@ -152,19 +152,18 @@ if __name__ == "__main__":
                 prox = i+1
                 if prox >= len(temp_m):
                     prox = i
-                if temp_m[now]['rawdata_id'] != temp_m[prox]['rawdata_id']:
+                if not temp_m[now]['rawdata_id'] in rawadatas_ids:
                     temp_list = []
                     for search in temp_m:
                         if search['rawdata_id'] == temp_m[now]['rawdata_id']:
                             temp_list.append(search)    
-                    list_matchs.append(temp_list[0:])   
+                    list_matchs.append(temp_list[0])   
                     rawadatas_ids.append(temp_m[now]['rawdata_id'])
-            list_matchs.append(temp_m[-1])   
-            rawadatas_ids.append(temp_m[-1]['rawdata_id'])
 
             print('')
             print(rawadatas_ids)
             matchs_export = []
+
             for lists in list_matchs:
                 if type(lists) == list:
                     for y in lists:
