@@ -18,19 +18,17 @@ def _get_divisor(reference, target):
 class SimilarityService:
 
     def __init__(self):
-        self.similarity_percentage_accepted = 70.00
-        self.jaccard_percentage_accepted = 70.00
         self.string_cleaner = StringCleaner()
 
     def _clear_string(self, target):
         return self.string_cleaner.remove_stop_words(target)
 
-    def is_match(self, result):
-        if result['similarity'] >= self.similarity_percentage_accepted:
-            return True
-        if result['jaccard'] >= self.jaccard_percentage_accepted:
-            return True
-        return False
+    def match(self, result):
+        if result['similarity'] >= 80.00 or result['jaccard'] >=80.00:
+            return 'match'
+        if result['similarity'] >= 65.00 and result['similarity'] <= 79.99 or result['jaccard'] >= 65.00 and result['jaccard'] <= 79.99:
+            return 'inconclusive'      
+        return 'no_match'
 
     def calculate(self, reference, target):
         result = {}
@@ -46,7 +44,7 @@ class SimilarityService:
         jaccard_result = compute_jaccard_similarity_score(reference, target)
         result['jaccard'] = round(jaccard_result, 2)
 
-        result['matched'] = self.is_match(result)
+        result['matched'] = self.match(result)
         return result
 
 

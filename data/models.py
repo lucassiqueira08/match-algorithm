@@ -34,16 +34,14 @@ class Comparation(Base):
     company_id = Column(Integer, ForeignKey('company.id'))
     product_id = Column(Integer, ForeignKey('products.id'))
     rawdata_id = Column(Integer, ForeignKey('rawdata.id'))
-    distance = Column(Float)
     similarity = Column(Float)
     jaccard = Column(Float)
-    matched = Column(Boolean)
+    matched = Column(String)
 
-    def __init__(self, company_id, product_id, rawdata_id, distance, similarity, jaccard, matched, *args, **kwargs):
+    def __init__(self, company_id, product_id, rawdata_id, similarity, jaccard, matched, *args, **kwargs):
         self.company_id = company_id
         self.product_id = product_id
         self.rawdata_id = rawdata_id
-        self.distance = distance
         self.similarity = similarity
         self.jaccard = jaccard
         self.matched = matched
